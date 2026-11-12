@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Store Order Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f5;--card:#fff;--ink:#16241f;--mut:#5d6d66;--line:#dbe3df;--acc:#0f6b57;--accsoft:#e2f1ec;--bad:#b3261e;--badsoft:#fbe9e7;--ok:#1b7a3d;--warn:#8a5a00;--warnsoft:#fff3d6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1714;--card:#18231f;--ink:#e6efeb;--mut:#9bb0a8;--line:#2a3a34;--acc:#4cc9a4;--accsoft:#16342b;--bad:#ff8a80;--badsoft:#3a1d1b;--ok:#6fd58f;--warn:#f0c15a;--warnsoft:#3a2f12;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1714;--card:#18231f;--ink:#e6efeb;--mut:#9bb0a8;--line:#2a3a34;--acc:#4cc9a4;--accsoft:#16342b;--bad:#ff8a80;--badsoft:#3a1d1b;--ok:#6fd58f;--warn:#f0c15a;--warnsoft:#3a2f12;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}.sub{color:var(--mut);margin:0 0 14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+.k{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.k small{color:var(--mut);display:block}.k b{font:500 20px "IBM Plex Mono",monospace}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:6px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.bad{color:var(--bad)}.good{color:var(--ok)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px}
+select,input[type=search]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);min-width:0}
+select{width:100%;max-width:340px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.grid div small{color:var(--mut);display:block}.grid div b{font:500 17px "IBM Plex Mono",monospace}
+.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;background:var(--acc);width:0}
+.bar.over i{background:var(--bad)}
+.note{margin-top:10px;padding:8px 10px;border-radius:6px;background:var(--accsoft);font-size:14px}
+.note.over{background:var(--badsoft);color:var(--bad)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{position:sticky;top:0;background:var(--card);font-weight:600;color:var(--mut);font-size:13px}
+th:nth-child(1),td:nth-child(1),th:nth-child(2),td:nth-child(2){text-align:left}
+td:nth-child(2){white-space:normal;min-width:200px}
+td.num,.mono{font-family:"IBM Plex Mono",monospace;font-size:13px}
+td input{width:76px;padding:6px;font:500 14px "IBM Plex Mono",monospace;text-align:right;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--ink)}
+td input:focus{outline:2px solid var(--acc)}td input.lim{border-color:var(--bad);background:var(--badsoft)}
+tr.has td{background:var(--accsoft)}
+.tag{font-size:11px;padding:1px 6px;border-radius:9px;background:var(--warnsoft);color:var(--warn);margin-left:6px}
+tfoot td{font-weight:600;position:sticky;bottom:0;background:var(--card)}
+.pill{padding:2px 8px;border-radius:10px;font-size:12px;background:var(--accsoft);color:var(--ok)}.pill.over{background:var(--badsoft);color:var(--bad)}
+.hint{color:var(--mut);font-size:13px}
+button.sm{font:inherit;font-size:13px;padding:6px 10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;cursor:pointer}
+</style></head><body><div class="wrap" id="login" style="max-width:380px;padding-top:10vh"><div class="panel"><h1>Store Order Portal</h1><p class="sub">Sign in to continue.</p>
+<label class="hint" for="lu">Username</label><input id="lu" type="text" autocomplete="username" autocapitalize="off" style="width:100%;margin:4px 0 10px;font:inherit;padding:9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">
+<label class="hint" for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" style="width:100%;margin:4px 0 12px;font:inherit;padding:9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">
+<button class="sm" id="lb" style="width:100%;background:var(--acc);color:#fff;border-color:var(--acc);padding:10px">Sign in</button><div class="hint bad" id="le" style="margin-top:8px"></div></div></div>
+<div class="wrap" id="app" hidden>
+<h1>Store Order Portal</h1>
+<p class="sub">Enter order quantities and see the order value and store budget instantly. </p>
+<div class="row" style="margin-bottom:10px;justify-content:space-between"><span class="hint" id="who"></span><button class="sm" id="lo">Sign out</button></div>
+<div class="kpis" id="kpis"></div>
+<div class="row" style="margin-bottom:6px"><button class="sm" id="up">Update IASR file</button><input type="file" id="fl" accept=".xlsx,.xls" hidden><button class="sm" id="ca">Clear all orders</button><button class="sm" id="exp" style="background:var(--acc);color:#fff;border-color:var(--acc);padding:9px 14px">Download Excel (all stores)</button><span class="hint" id="sync"></span></div>
+<div class="hint" id="fi"></div><div class="hint" id="fm" style="margin-bottom:10px"></div>
+<details class="panel" id="share"><summary style="cursor:pointer;font-weight:600">Send or collect orders (works without sign-in)</summary>
+<p class="hint"><b>Managers:</b> pick your store, enter quantities, then press "Get my order code" and send that code to the admin (WhatsApp, email, anything).</p>
+<div class="row"><button class="sm" id="gc">Get my order code</button></div>
+<textarea id="code" rows="3" readonly style="width:100%;margin-top:8px;font:13px 'IBM Plex Mono',monospace;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:8px" placeholder="Your order code will appear here"></textarea>
+<div id="adm"><p class="hint"><b>Admin:</b> paste all codes you received (one per line) and press Import. Then press "Download Excel (all stores)".</p>
+<textarea id="imp" rows="4" style="width:100%;font:13px 'IBM Plex Mono',monospace;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:8px" placeholder="IASR|104|Walters|3:5,7:2"></textarea>
+<div class="row" style="margin-top:8px"><button class="sm" id="imb">Import orders</button><span class="hint" id="ims"></span></div></div></details>
+<div class="tabs"><button id="t1" class="on">Enter order</button><button id="t2">All stores summary</button></div>
+<div id="v1">
+ <div class="panel">
+  <div class="row"><select id="store" aria-label="Store"></select>
+  <input type="search" id="q" placeholder="Search product or SKU" style="flex:1;min-width:180px">
+  <label class="hint"><input type="checkbox" id="only"> show entered items only</label>
+  <button class="sm" id="clr">Clear this store's order</button></div>
+  <div class="grid" id="sg"></div>
+  <div class="bar" id="bar"><i></i></div>
+  <div class="note" id="note"></div>
+ </div>
+ <div class="scroll"><table><thead><tr><th>SKU</th><th>Product</th><th>Unit cost</th><th>In stock</th><th>On order</th><th>L2WS</th><th>Max qty</th><th>Order qty</th><th>Order value</th></tr></thead><tbody id="tb"></tbody>
+ <tfoot><tr><td colspan="7">Store total</td><td class="num" id="fq">0</td><td class="num" id="fv">$0.00</td></tr></tfoot></table></div>
+ <p class="hint">Max qty = allocation minus what is already on order. The box turns red if you enter more than this. Data is taken from your IASR Excel file.</p>
+</div>
+<div id="v2" hidden><div class="scroll"><table><thead><tr><th>Loc</th><th>Store</th><th>Available budget</th><th>Order value</th><th>Remaining</th><th>Pool remaining</th><th>Status</th></tr></thead><tbody id="sb"></tbody></table></div>
+<p class="hint">Manager store budgets are counted as a pool (e.g. Lockwood + Mercury). Click a row to open that store's order.</p></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const D={"skus":[["SSGN4012","BYOD pSIM Kit 5GSA (AR)",5.0],["DERW4124","Debut Flex (CPO) 4GB Graphite Gray",49.99],["DERW4127","Turbo Hotspot™ 3 (CPO) 256GB Blue Vader",49.99],["DERW4129","Debut S3 (CPO) 64GB Anchor Gray",59.99],["DEMK4135","Cricket GoLink 5G Hotspot 32GB Dusk Blue",89.99],["DEMK4124","Debut Flex (New)",99.99],["DEMN4134","Icon - 2026 64GB Steel Gray",104.99],["DEMN4132","Icon Plus – 2026 64GB Twilight Purple",109.99],["DEMN4137","Icon Plus – 2027 64GB Nightshade",169.99],["DEMN4133","Icon Pro - 2026 128GB Pearl Gray",139.99],["DMTN4134","Motorola moto g play - 2026 64GB Tapestry",159.99],["DMTN4135","Motorola moto g - 2026 128GB Slipstream",189.99],["DSMN4151","Galaxy A16 5G 128GB Blue Black",199.99],["DSMN4154","Galaxy Tab A9+ 5G 64GB Graphite",199.99],["DMTN4136","Motorola moto g power - 2026 128GB Evening Blue",199.99],["DCMK4001","Cricket Gateway 8GB Cool Gray",209.99],["DSMN4156","Galaxy A17 5G 128GB Black",229.99],["DMTN4128","Motorola moto g stylus - 2025 128GB Gibraltar Sea",239.99],["DSMN4159","Galaxy Tab A11+ 5G 128GB Gray",259.99],["WAPN7175","Apple Watch SE 3 40mm Midnight w Sport Band (S/M)",299.99],["DMTN4133","Motorola edge - 2025 256GB Deep Forest",359.99],["DSMN4158","Galaxy A37 5G 128GB Awesome Charcoal",404.99],["WAPN7124","Apple Watch Series 10 42mm Rose Gold w Sport Band (S/M)",449.99],["WAPN7178","Apple Watch Series 11 42mm Rose Gold w Sport Band (S/M)",449.99],["DMTN4139","Motorola edge - 2026 128GB Martini Olive",469.99],["DACP4368","iPhone 14 (Cricket CPO) 128GB Blue",579.99],["DACP4366","iPhone 14 (Cricket CPO) 128GB Purple",579.99],["DACP4367","iPhone 14 (Cricket CPO) 128GB RED",579.99],["DSMN4162","Galaxy A57 5G 128GB Awesome Navy",599.99],["DAPN4550","iPhone 16e 128GB Black",599.99],["DAPN4632","iPhone 17e 256GB Black",599.99],["DAPN4633","iPhone 17e 256GB Soft Pink",599.99],["DAPN4631","iPhone 17e 256GB White",599.99],["DMTK4119","razr - 2023 128GB Sage Green",599.99],["DMTN4129","razr - 2025 256GB Gibraltar Sea",599.99],["DMTN4131","razr - 2025 256GB Parfait Pink",599.99],["DAPN4432","iPhone 15 128GB Black",629.99],["DSMN4155","Galaxy S25 FE 128GB Jetblack",649.99],["DSMN4161","Galaxy S26 FE 128GB Graphite",699.99],["DAPN4555","iPhone 16e 256GB Black",699.99],["DAPN4490","iPhone 16 128GB Black",829.99],["DAPN4570","iPhone 17 256GB Black",929.99],["DAPN4573","iPhone 17 256GB Lavender",929.99],["DSMN4157","Galaxy S26 256GB Black",999.99],["DAPN4601","iPhone 17 Pro 256GB Cosmic Orange",1099.99],["DAPN4600","iPhone 17 Pro 256GB Deep Blue",1099.99],["DAPN4602","iPhone 17 Pro 256GB Silver",1099.99],["DAPN4585","iPhone Air 256GB Light Gold",1099.99],["DAPN4618","iPhone 17 Pro Max 256GB Cosmic Orange",1199.99],["DAPN4617","iPhone 17 Pro Max 256GB Deep Blue",1199.99],["DAPN4616","iPhone 17 Pro Max 256GB Silver",1199.99],["DAPN4660","iPhone 18 Pro 256GB Burgundy",1199.99],["DAPN4661","iPhone 18 Pro 256GB Glacier",1199.99],["DAPN4669","iPhone 18 Pro Max 256GB Burgundy",1299.99],["DAPN4670","iPhone 18 Pro Max 256GB Glacier",1299.99],["DAPN4668","iPhone 18 Pro Max 256GB Black",1299.99],["DAPN4689","iPhone 18 Pro Max 256GB Silver",1299.99],["DSMN4160","Galaxy S26 Ultra 256GB Black",1399.99],["DSMN4163","Galaxy Z Fold8 256GB Graphite",1899.99]],"stores":[{"id":101,"name":"Lockwood","budget":56954.98,"inv":42123.55,"pool":"M1","mgr":true},{"id":106,"name":"Shotwell","budget":75657.76,"inv":63037.99,"pool":"M4","mgr":true},{"id":112,"name":"Humble","budget":89674.06,"inv":83438.04,"pool":"M3","mgr":true},{"id":121,"name":"Jensen","budget":35169.82,"inv":39443.68,"pool":"M4","mgr":true},{"id":126,"name":"Mercury","budget":25000,"inv":25129.21,"pool":"M1","mgr":true},{"id":129,"name":"East Mount","budget":25000,"inv":25004.33,"pool":"M2","mgr":true},{"id":130,"name":"Bypass 1960","budget":25000,"inv":26504.18,"pool":"M2","mgr":true}],"rows":[[101,0,"IN STOCK",33,0,28,200],[106,0,"IN STOCK",27,0,26,200],[112,0,"IN STOCK",37,0,10,200],[121,0,"IN STOCK",24,0,8,200],[126,0,"IN STOCK",34,0,4,200],[129,0,"IN STOCK",32,0,0,200],[130,0,"IN STOCK",32,0,1,200],[101,1,"IN STOCK",13,0,2,40],[106,1,"IN STOCK",1,0,4,40],[112,1,"IN STOCK",2,0,0,40],[121,1,"IN STOCK",5,0,1,40],[126,1,"IN STOCK",1,0,0,40],[129,1,"IN STOCK",3,0,0,40],[130,1,"IN STOCK",4,0,0,40],[101,2,"IN STOCK",0,0,0,40],[106,2,"IN STOCK",0,0,0,40],[112,2,"IN STOCK",2,0,0,40],[121,2,"IN STOCK",0,0,0,40],[126,2,"IN STOCK",2,0,0,40],[129,2,"IN STOCK",1,0,0,40],[130,2,"IN STOCK",3,0,0,40],[101,3,"IN STOCK",8,0,5,0],[106,3,"IN STOCK",17,0,2,0],[112,3,"IN STOCK",9,0,4,0],[121,3,"IN STOCK",9,0,2,0],[126,3,"IN STOCK",7,0,0,0],[129,3,"IN STOCK",3,0,3,0],[130,3,"IN STOCK",2,0,0,0],[101,4,"IN STOCK",0,0,0,40],[106,4,"IN STOCK",0,0,0,40],[112,4,"IN STOCK",0,0,0,40],[121,4,"IN STOCK",0,0,0,40],[126,4,"IN STOCK",0,0,0,40],[129,4,"IN STOCK",0,0,0,40],[130,4,"IN STOCK",2,0,0,40],[101,5,"IN STOCK",4,0,0,40],[106,5,"IN STOCK",1,0,0,40],[112,5,"IN STOCK",1,0,0,40],[121,5,"IN STOCK",2,0,0,40],[126,5,"IN STOCK",1,0,0,40],[129,5,"IN STOCK",0,0,0,40],[130,5,"IN STOCK",0,0,0,40],[101,6,"EOL",3,0,0,0],[126,7,"EOL",5,0,0,0],[129,7,"EOL",3,0,0,0],[130,7,"EOL",1,0,0,0],[101,8,"IN STOCK",3,0,0,40],[121,8,"IN STOCK",0,0,2,40],[106,8,"IN STOCK",2,0,0,40],[112,8,"IN STOCK",4,0,0,40],[126,8,"IN STOCK",2,0,0,40],[129,8,"IN STOCK",1,0,0,40],[130,8,"IN STOCK",2,0,0,40],[101,9,"IN STOCK",11,0,5,40],[106,9,"IN STOCK",9,0,1,40],[112,9,"IN STOCK",2,0,0,40],[121,9,"IN STOCK",0,0,3,40],[126,9,"IN STOCK",5,0,0,40],[129,9,"IN STOCK",1,0,0,40],[130,9,"IN STOCK",1,0,0,40],[101,10,"IN STOCK",18,0,13,40],[106,10,"IN STOCK",30,20,28,20],[112,10,"IN STOCK",15,0,5,40],[121,10,"IN STOCK",22,10,9,30],[126,10,"IN STOCK",11,0,9,40],[129,10,"IN STOCK",4,0,2,40],[130,10,"IN STOCK",6,0,0,40],[101,11,"IN STOCK",11,0,0,40],[106,11,"IN STOCK",4,0,11,40],[112,11,"IN STOCK",12,6,9,34],[121,11,"IN STOCK",6,0,1,40],[126,11,"IN STOCK",9,0,3,40],[129,11,"IN STOCK",3,0,2,40],[130,11,"IN STOCK",8,0,0,40],[101,12,"IN STOCK",12,0,10,40],[106,12,"IN STOCK",19,5,4,35],[112,12,"IN STOCK",15,0,2,40],[121,12,"IN STOCK",3,10,3,30],[126,12,"IN STOCK",5,0,2,40],[129,12,"IN STOCK",6,0,0,40],[130,12,"IN STOCK",10,0,0,40],[101,14,"IN STOCK",7,0,2,40],[106,14,"IN STOCK",8,0,3,40],[112,14,"IN STOCK",17,0,2,40],[121,14,"IN STOCK",9,0,0,40],[126,14,"IN STOCK",1,0,1,40],[129,14,"IN STOCK",6,0,1,40],[130,14,"IN STOCK",4,0,0,40],[101,15,"Out of Stock",5,0,2,0],[106,15,"Out of Stock",5,2,7,0],[112,15,"Out of Stock",5,2,1,0],[121,15,"Out of Stock",0,2,5,0],[126,15,"Out of Stock",2,0,1,0],[129,15,"Out of Stock",4,0,0,0],[130,15,"Out of Stock",5,0,0,0],[101,16,"IN STOCK",6,0,2,40],[106,16,"IN STOCK",19,0,13,40],[112,16,"IN STOCK",15,0,13,40],[121,16,"IN STOCK",8,8,8,32],[126,16,"IN STOCK",3,0,5,40],[129,16,"IN STOCK",2,0,7,40],[130,16,"IN STOCK",6,0,0,40],[101,17,"IN STOCK",4,0,0,40],[106,17,"IN STOCK",6,0,0,40],[112,17,"IN STOCK",4,0,0,40],[121,17,"IN STOCK",8,0,0,40],[126,17,"IN STOCK",1,0,0,40],[129,17,"IN STOCK",4,0,0,40],[130,17,"IN STOCK",4,0,0,40],[101,18,"IN STOCK",2,0,0,40],[106,18,"IN STOCK",0,0,1,40],[112,18,"IN STOCK",1,2,2,38],[121,18,"IN STOCK",2,0,0,40],[126,18,"IN STOCK",1,0,0,40],[129,18,"IN STOCK",2,0,0,40],[130,18,"IN STOCK",2,0,0,40],[101,20,"EOL",1,0,0,0],[106,20,"EOL",3,0,1,0],[126,20,"EOL",1,0,0,0],[101,21,"IN STOCK",1,0,0,40],[106,21,"IN STOCK",0,3,1,37],[112,21,"IN STOCK",5,0,0,40],[121,21,"IN STOCK",1,2,1,38],[126,21,"IN STOCK",2,0,0,40],[129,21,"IN STOCK",3,0,0,40],[130,21,"IN STOCK",3,0,0,40],[106,22,"Out of Stock",1,0,0,0],[101,24,"IN STOCK",4,0,0,40],[106,24,"IN STOCK",7,0,0,40],[112,24,"IN STOCK",4,0,0,40],[121,24,"IN STOCK",2,0,0,40],[126,24,"IN STOCK",1,0,0,40],[129,24,"IN STOCK",2,0,0,40],[130,24,"IN STOCK",2,0,0,40],[112,25,"Out of Stock",0,0,1,0],[101,26,"IN STOCK",2,0,2,1],[106,26,"IN STOCK",1,0,0,1],[112,26,"IN STOCK",1,1,0,0],[121,26,"IN STOCK",0,0,0,1],[126,26,"IN STOCK",0,0,0,1],[129,26,"IN STOCK",0,0,0,0],[130,26,"IN STOCK",0,0,0,0],[101,28,"IN STOCK",0,0,1,5],[106,28,"IN STOCK",0,0,0,5],[112,28,"IN STOCK",1,0,0,5],[121,28,"IN STOCK",0,0,0,5],[126,28,"IN STOCK",0,0,0,5],[129,28,"IN STOCK",0,0,0,5],[130,28,"IN STOCK",0,0,0,5],[101,29,"IN STOCK",13,0,10,40],[106,29,"IN STOCK",6,7,24,33],[112,29,"IN STOCK",22,5,24,35],[121,29,"IN STOCK",4,5,7,35],[126,29,"IN STOCK",8,0,2,40],[129,29,"IN STOCK",5,0,1,40],[130,29,"IN STOCK",1,0,0,40],[101,30,"IN STOCK",0,0,0,0],[106,30,"IN STOCK",0,0,0,0],[112,30,"IN STOCK",2,0,1,0],[121,30,"IN STOCK",0,0,0,0],[126,30,"IN STOCK",0,0,0,0],[129,30,"IN STOCK",0,0,0,0],[130,30,"IN STOCK",0,0,0,0],[101,31,"IN STOCK",0,0,0,40],[106,31,"IN STOCK",0,0,0,40],[112,31,"IN STOCK",1,0,1,40],[121,31,"IN STOCK",0,0,0,40],[126,31,"IN STOCK",0,0,0,40],[129,31,"IN STOCK",1,0,0,40],[130,31,"IN STOCK",0,0,0,40],[101,32,"IN STOCK",1,0,0,40],[106,32,"IN STOCK",1,0,0,40],[112,32,"IN STOCK",2,0,1,40],[121,32,"IN STOCK",0,0,0,40],[126,32,"IN STOCK",0,0,0,40],[129,32,"IN STOCK",0,0,0,40],[130,32,"IN STOCK",2,0,0,40],[101,33,"IN STOCK",2,0,2,38],[106,33,"IN STOCK",2,0,0,40],[112,33,"IN STOCK",2,0,0,40],[121,33,"IN STOCK",1,0,0,40],[126,33,"IN STOCK",2,0,0,40],[129,33,"IN STOCK",2,0,0,40],[130,33,"IN STOCK",2,0,0,40],[101,34,"IN STOCK",3,0,0,40],[106,34,"IN STOCK",2,0,0,40],[112,34,"IN STOCK",3,0,0,40],[121,34,"IN STOCK",1,0,0,40],[126,34,"IN STOCK",1,0,0,40],[129,34,"IN STOCK",1,0,0,40],[130,34,"IN STOCK",1,0,0,40],[101,35,"IN STOCK",1,0,0,40],[106,35,"IN STOCK",1,0,1,40],[121,35,"IN STOCK",1,0,0,40],[126,35,"IN STOCK",0,0,0,40],[129,35,"IN STOCK",1,0,0,40],[130,35,"IN STOCK",1,0,0,40],[101,36,"IN STOCK",1,0,0,40],[106,36,"IN STOCK",1,0,0,40],[112,36,"IN STOCK",2,0,0,40],[121,36,"IN STOCK",1,0,0,40],[126,36,"IN STOCK",1,0,0,40],[129,36,"IN STOCK",1,0,0,40],[130,36,"IN STOCK",1,0,0,40],[101,37,"EOL",1,0,0,0],[129,37,"EOL",1,0,0,0],[106,37,"EOL",1,0,0,0],[112,37,"EOL",1,0,0,0],[121,37,"EOL",1,0,0,0],[126,37,"EOL",1,0,0,0],[101,38,"IN STOCK",3,0,0,40],[106,38,"IN STOCK",2,2,0,38],[112,38,"IN STOCK",7,2,3,38],[121,38,"IN STOCK",0,1,3,39],[126,38,"IN STOCK",1,0,0,40],[129,38,"IN STOCK",1,0,0,40],[130,38,"IN STOCK",3,0,0,40],[101,40,"Out of Stock",0,0,0,5],[106,40,"Out of Stock",0,0,0,5],[112,40,"Out of Stock",0,0,1,5],[121,40,"Out of Stock",0,0,0,5],[126,40,"Out of Stock",0,0,0,5],[129,40,"Out of Stock",0,0,0,5],[130,40,"Out of Stock",1,0,0,5],[101,41,"Out of Stock",0,0,0,0],[106,41,"Out of Stock",0,0,0,0],[112,41,"Out of Stock",0,0,0,0],[121,41,"Out of Stock",0,0,0,0],[126,41,"Out of Stock",0,0,0,0],[129,41,"Out of Stock",0,0,0,0],[130,41,"Out of Stock",0,0,0,0],[101,42,"IN STOCK",0,0,0,2],[106,42,"IN STOCK",0,0,0,2],[112,42,"IN STOCK",0,0,0,2],[121,42,"IN STOCK",0,0,0,2],[126,42,"IN STOCK",0,0,0,2],[129,42,"IN STOCK",0,0,0,2],[130,42,"IN STOCK",0,0,0,2],[101,43,"IN STOCK",1,0,0,20],[106,43,"IN STOCK",4,0,0,20],[112,43,"IN STOCK",2,0,0,20],[121,43,"IN STOCK",2,0,0,20],[126,43,"IN STOCK",1,0,0,20],[129,43,"IN STOCK",1,0,0,20],[130,43,"IN STOCK",1,0,0,20],[101,44,"IN STOCK",0,0,0,5],[106,44,"IN STOCK",0,0,0,5],[112,44,"IN STOCK",1,0,0,5],[121,44,"IN STOCK",0,0,0,5],[126,44,"IN STOCK",0,0,0,5],[129,44,"IN STOCK",0,0,0,5],[130,44,"IN STOCK",0,0,0,5],[101,45,"IN STOCK",0,0,0,5],[106,45,"IN STOCK",0,0,0,5],[112,45,"IN STOCK",0,0,0,5],[121,45,"IN STOCK",0,0,0,5],[126,45,"IN STOCK",0,0,0,5],[129,45,"IN STOCK",0,0,0,5],[130,45,"IN STOCK",0,0,0,5],[101,46,"Out of Stock",0,0,0,0],[106,46,"Out of Stock",0,0,0,0],[112,46,"Out of Stock",0,0,1,0],[121,46,"Out of Stock",0,0,0,0],[126,46,"Out of Stock",0,0,0,0],[129,46,"Out of Stock",0,0,0,0],[130,46,"Out of Stock",0,0,0,0],[101,48,"IN STOCK",1,0,1,5],[106,48,"IN STOCK",0,0,1,5],[112,48,"IN STOCK",2,0,1,5],[121,48,"IN STOCK",0,0,2,5],[126,48,"IN STOCK",0,0,0,5],[129,48,"IN STOCK",1,0,0,5],[130,48,"IN STOCK",1,0,0,5],[101,49,"IN STOCK",0,0,0,5],[129,49,"IN STOCK",1,0,1,5],[130,49,"IN STOCK",0,0,0,5],[106,49,"IN STOCK",1,0,0,5],[112,49,"IN STOCK",2,0,0,5],[121,49,"IN STOCK",0,0,1,5],[126,49,"IN STOCK",0,0,0,5],[101,50,"Out of Stock",0,0,1,0],[106,50,"Out of Stock",0,0,1,0],[112,50,"Out of Stock",2,0,1,0],[121,50,"Out of Stock",1,0,0,0],[126,50,"Out of Stock",1,0,0,0],[129,50,"Out of Stock",1,0,0,0],[130,50,"Out of Stock",2,0,0,0],[101,51,"Out of Stock",0,0,1,0],[106,51,"Out of Stock",0,0,0,0],[112,51,"Out of Stock",0,0,2,0],[121,51,"Out of Stock",0,0,0,0],[126,51,"Out of Stock",0,0,0,0],[129,51,"Out of Stock",0,0,0,0],[130,51,"Out of Stock",0,0,0,0],[101,52,"IN STOCK",0,0,0,0],[106,52,"IN STOCK",1,0,0,0],[112,52,"Out of Stock",2,0,0,0],[121,52,"IN STOCK",0,0,0,0],[126,52,"IN STOCK",0,0,0,0],[129,52,"IN STOCK",0,0,0,0],[130,52,"IN STOCK",0,0,0,0],[101,53,"Out of Stock",0,0,1,0],[106,53,"Out of Stock",0,0,2,0],[112,53,"Out of Stock",0,0,3,0],[121,53,"Out of Stock",0,0,1,0],[126,53,"Out of Stock",0,0,0,0],[129,53,"Out of Stock",0,0,2,0],[130,53,"Out of Stock",0,0,0,0],[101,54,"Out of Stock",0,0,0,0],[106,54,"Out of Stock",0,0,2,0],[112,54,"Out of Stock",0,0,2,0],[121,54,"Out of Stock",2,0,0,0],[126,54,"Out of Stock",1,0,0,0],[129,54,"Out of Stock",1,0,0,0],[130,54,"Out of Stock",0,0,0,0],[101,55,"IN STOCK",2,0,0,2],[106,55,"IN STOCK",5,0,0,2],[112,55,"Out of Stock",3,2,3,0],[121,55,"IN STOCK",2,0,0,2],[126,55,"IN STOCK",1,0,2,2],[129,55,"IN STOCK",0,0,0,2],[130,55,"IN STOCK",0,0,0,2],[101,56,"Out of Stock",0,0,0,0],[106,56,"Out of Stock",1,0,0,0],[112,56,"Out of Stock",2,0,0,0],[121,56,"Out of Stock",0,0,1,0],[126,56,"Out of Stock",0,0,0,0],[129,56,"Out of Stock",0,0,0,0],[130,56,"Out of Stock",0,0,0,0],[101,57,"IN STOCK",1,0,0,5],[106,57,"IN STOCK",1,0,1,5],[112,57,"IN STOCK",2,0,0,5],[121,57,"IN STOCK",1,0,0,5],[126,57,"IN STOCK",1,0,0,5],[129,57,"IN STOCK",1,0,0,5],[130,57,"IN STOCK",1,0,0,5],[101,58,"IN STOCK",0,0,0,2],[106,58,"IN STOCK",0,0,0,2],[112,58,"IN STOCK",1,0,0,2],[121,58,"IN STOCK",0,0,0,2],[126,58,"IN STOCK",0,0,0,2],[129,58,"IN STOCK",0,0,0,2],[130,58,"IN STOCK",0,0,0,2]]};const USERS={"telenor":{"h":"65f7050d2de5c9417f66d74dfd509acea5ede3a9b6a8e19523f7de23a69bcee0","role":"admin","loc":0}};const SALT="iasr-nov26";let ME=null;const BUILD=1794507103926;let META={name:"built-in file (11 Nov 2026)",t:BUILD};
+let SK=D.skus,ROWS=D.rows;const ST=D.stores;
+const fm=n=>(n<0?"-":"")+"$"+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+let Q={};try{Q=JSON.parse(localStorage.getItem("orderQty2")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("orderQty2",JSON.stringify(Q))}catch(e){}};
+const $=id=>document.getElementById(id);
+const byId={};ST.forEach(s=>{s.avail=+(s.budget-s.inv).toFixed(2);byId[s.id]=s});
+function recalc(){ST.forEach(s=>s.inv=0);ROWS.forEach(r=>{const s=byId[r[0]];if(s)s.inv+=(r[3]+r[4])*SK[r[1]][2]});ST.forEach(s=>{s.inv=+s.inv.toFixed(2);s.avail=+(s.budget-s.inv).toFixed(2)})}recalc();
+const pools={};ST.forEach(s=>{(pools[s.pool]=pools[s.pool]||[]).push(s)});
+function ov(id){let t=0;ROWS.forEach(r=>{if(r[0]==id){const q=Q[id+"_"+SK[r[1]][0]]||0;t+=q*SK[r[1]][2]}});return +t.toFixed(2)}
+function info(id){const s=byId[id],o=ov(id),m=pools[s.pool];const pa=m.reduce((a,x)=>a+x.avail,0),po=m.reduce((a,x)=>a+ov(x.id),0);return{s,o,rem:s.avail-o,m,pa,po,prem:pa-po}}
+function kpis(){let o=0,a=0;ST.forEach(s=>{o+=ov(s.id);a+=s.avail});const r=a-o;
+$("kpis").innerHTML=`<div class="k"><small>Total order value</small><b>${fm(o)}</b></div><div class="k"><small>Total available budget</small><b>${fm(a)}</b></div><div class="k"><small>Budget left after orders</small><b class="${r<0?"bad":"good"}">${fm(r)}</b></div>`}
+function head(id){const i=info(id),s=i.s;const pooled=i.m.length>1;const over=i.prem<0;
+$("sg").innerHTML=`<div><small>Nov 2026 budget</small><b>${fm(s.budget)}</b></div><div><small>Current inventory</small><b>${fm(s.inv)}</b></div><div><small>Available budget</small><b class="${s.avail<0?"bad":""}">${fm(s.avail)}</b></div><div><small>This order value</small><b>${fm(i.o)}</b></div><div><small>Store budget remaining</small><b class="${i.rem<0?"bad":"good"}">${fm(i.rem)}</b></div>`+(pooled?`<div><small>Pooled budget (${i.m.map(x=>x.name).join(" + ")})</small><b class="${i.pa<0?"bad":""}">${fm(i.pa)}</b></div><div><small>Pool orders</small><b>${fm(i.po)}</b></div><div><small>Pool remaining</small><b class="${i.prem<0?"bad":"good"}">${fm(i.prem)}</b></div>`:"");
+const base=pooled?i.pa:s.avail,used=pooled?i.po:i.o;const pct=base>0?Math.min(100,used/base*100):(used>0?100:0);
+$("bar").className="bar"+(over||(!pooled&&i.rem<0)?" over":"");$("bar").firstElementChild.style.width=pct+"%";
+const bad=pooled?over:i.rem<0;
+$("note").className="note"+(bad?" over":"");
+$("note").textContent=bad?`Order exceeds the budget by ${fm(Math.abs(pooled?i.prem:i.rem))}${pooled?" (based on pool)":""}. Reduce the quantity.`:`Within budget. ${pooled?"Pool has":"Store has"} ${fm(pooled?i.prem:i.rem)} remaining.`;
+let fq=0;ROWS.forEach(r=>{if(r[0]==id)fq+=Q[id+"_"+SK[r[1]][0]]||0});$("fq").textContent=fq;$("fv").textContent=fm(i.o)}
+function table(){const id=+$("store").value,q=$("q").value.toLowerCase(),only=$("only").checked;let h="";
+ROWS.forEach(r=>{if(r[0]!=id)return;const k=SK[r[1]],key=id+"_"+k[0],v=Q[key]||0;
+if(q&&!(k[0]+" "+k[1]).toLowerCase().includes(q))return;if(only&&!v)return;
+h+=`<tr data-k="${key}" class="${v?"has":""}"><td class="mono">${k[0]}</td><td>${k[1]}${r[2]!="IN STOCK"?`<span class="tag">${r[2]}</span>`:""}</td><td class="num">${fm(k[2])}</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td><td class="num">${r[5]}</td><td class="num">${r[6]}</td><td><input type="number" min="0" step="1" inputmode="numeric" value="${v||""}" data-k="${key}" data-m="${r[6]}" data-c="${k[2]}" aria-label="Order qty ${k[0]}"></td><td class="num" id="v_${key}">${v?fm(v*k[2]):"-"}</td></tr>`});
+$("tb").innerHTML=h||`<tr><td colspan="9" style="text-align:center;color:var(--mut)">No items found</td></tr>`;head(id)}
+$("tb").addEventListener("input",e=>{const t=e.target;if(t.tagName!="INPUT")return;let v=Math.max(0,Math.floor(+t.value||0));
+if(v)Q[t.dataset.k]=v;else delete Q[t.dataset.k];save();push(+t.dataset.k.split("_")[0]);
+t.classList.toggle("lim",v>+t.dataset.m);$("v_"+t.dataset.k).textContent=v?fm(v*+t.dataset.c):"-";t.closest("tr").classList.toggle("has",!!v);
+head(+$("store").value);kpis()});
+function summary(){let h="";ST.forEach(s=>{const i=info(s.id),p=i.m.length>1,bad=p?i.prem<0:i.rem<0;
+h+=`<tr style="cursor:pointer" data-s="${s.id}"><td class="mono">${s.id}</td><td>${s.name}${s.mgr?'<span class="tag">Manager</span>':""}</td><td class="num">${fm(s.avail)}</td><td class="num">${fm(i.o)}</td><td class="num ${i.rem<0?"bad":""}">${fm(i.rem)}</td><td class="num ${i.prem<0?"bad":""}">${p?fm(i.prem):"-"}</td><td><span class="pill ${bad?"over":""}">${bad?"Over budget":"OK"}</span></td></tr>`});$("sb").innerHTML=h}
+$("sb").addEventListener("click",e=>{const r=e.target.closest("tr");if(!r)return;$("store").value=r.dataset.s;tab(1);table()});
+function tab(n){$("v1").hidden=n!=1;$("v2").hidden=n!=2;$("t1").classList.toggle("on",n==1);$("t2").classList.toggle("on",n==2);if(n==2)summary()}
+$("t1").onclick=()=>tab(1);$("t2").onclick=()=>tab(2);
+$("store").onchange=table;$("q").oninput=table;$("only").onchange=table;
+$("clr").onclick=()=>{const id=+$("store").value;Object.keys(Q).forEach(k=>{if(k.startsWith(id+"_"))delete Q[k]});save();push(id);table();kpis()};
+let dbh=null,timers={};
+function push(loc){if(!dbh)return;clearTimeout(timers[loc]);timers[loc]=setTimeout(()=>{const q={};ROWS.forEach(r=>{if(r[0]==loc){const v=Q[loc+"_"+SK[r[1]][0]];if(v)q[SK[r[1]][0]]=v}});dbh.doc("orders/"+loc).set({q,t:Date.now()}).then(()=>{$("sync").textContent="Saved. All managers' orders are combined here."}).catch(()=>{$("sync").textContent="Could not save to the shared sheet. Check your access."})},600)}
+(async()=>{try{if(!window.claude)throw 0;const db=await claude.use("db");if(!db){$("sync").textContent="Orders are saved on this device only (open the link signed in to share them).";return}
+dbh=db;$("sync").textContent="Connected: all managers' orders are combined here.";const seen={};
+db.doc("config/iasr").onSnapshot(s=>{if(!s.exists)return;const x=s.data();if(!x||!(x.t>META.t))return;try{const nd=JSON.parse(x.d);applyData(nd,{name:x.name,t:x.t})}catch(e){}});
+db.collection("orders").onSnapshot(s=>{const cur=+$("store").value;let redo=false;
+s.docs.forEach(d=>{const loc=+d.id;if(!byId[loc]||(loc==cur&&seen[loc]))return;seen[loc]=1;const q=(d.data()||{}).q||{};
+Object.keys(Q).forEach(k=>{if(k.startsWith(loc+"_"))delete Q[k]});Object.keys(q).forEach(i=>{if(+q[i]>0)Q[loc+"_"+i]=+q[i]});if(loc==cur)redo=true});
+save();kpis();if(!$("v2").hidden)summary();if(redo)table();else head(cur)},()=>{$("sync").textContent="Could not load shared orders."})}catch(e){$("sync").textContent="Orders are saved on this device only."}})();
+$("gc").onclick=async()=>{const id=+$("store").value,p=[];ROWS.forEach(r=>{if(r[0]==id){const v=Q[id+"_"+SK[r[1]][0]];if(v)p.push(SK[r[1]][0]+":"+v)}});
+const c="IASR|"+id+"|"+byId[id].name+"|"+p.join(",");$("code").value=c;$("code").select();try{await navigator.clipboard.writeText(c);$("code").placeholder="Copied"}catch(e){}};
+$("imb").onclick=()=>{let n=0,bad=0;$("imp").value.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l)return;const a=l.split("|");if(a[0]!="IASR"||a.length<4){bad++;return}
+const loc=+a[1];if(!byId[loc]){bad++;return}
+Object.keys(Q).forEach(k=>{if(k.startsWith(loc+"_"))delete Q[k]});
+a[3].split(",").forEach(x=>{const [c0,v0]=x.split(":"),v=+v0;if(v>0&&ROWS.some(r=>r[0]==loc&&SK[r[1]][0]==c0))Q[loc+"_"+c0]=Math.floor(v)});push(loc);n++});
+save();kpis();table();if(!$("v2").hidden)summary();$("ims").textContent=n+" store order(s) imported"+(bad?", "+bad+" line(s) skipped":"")+"."};
+$("exp").onclick=async()=>{let dl=null;try{dl=window.claude&&await claude.use("downloads")}catch(e){}
+if(!dl){$("sync").textContent="Download is not available in this view. Open the artifact link in claude.ai.";return}
+const sm=[["Loc ID","Store","Type","Nov 2026 Budget","Current Inventory","Available Budget","Order Value","Remaining (store)","Pooled Available","Pool Orders","Pool Remaining","Status"]],od=[["Loc ID","Store","SKU","Product","Quantity","Unit Cost","Order Value"]],all=[["Loc ID","Location","Status","Vendor Sku","Product Name","In Stock","On Order","Unit Cost","To Order","Order Value"]];
+let tb=0,ti=0,ta=0,to=0;
+ST.forEach(s=>{const i=info(s.id),p=i.m.length>1,bad=p?i.prem<0:i.rem<0;tb+=s.budget;ti+=s.inv;ta+=s.avail;to+=i.o;
+sm.push([s.id,s.name,s.mgr?"Manager":"Non-Manager",s.budget,s.inv,s.avail,i.o,+i.rem.toFixed(2),p?+i.pa.toFixed(2):"",p?+i.po.toFixed(2):"",p?+i.prem.toFixed(2):"",bad?"Over budget":"OK"])});
+sm.push(["","Grand Total","",+tb.toFixed(2),+ti.toFixed(2),+ta.toFixed(2),+to.toFixed(2),+(ta-to).toFixed(2),"","","",""]);
+ROWS.forEach(r=>{const s=byId[r[0]],k=SK[r[1]],q=Q[r[0]+"_"+k[0]]||0,v=+(q*k[2]).toFixed(2);
+all.push([r[0],s.name,r[2],k[0],k[1],r[3],r[4],k[2],q||"",v]);
+if(q)od.push([r[0],s.name,k[0],k[1],q,k[2],v])});
+if(od.length>1){const tq=od.slice(1).reduce((a,x)=>a+x[4],0),tv=od.slice(1).reduce((a,x)=>a+x[6],0);od.push(["","","","Total",tq,"",+tv.toFixed(2)])}
+const wb=XLSX.utils.book_new();[["Order Report",od],["Store Summary",sm],["All Items",all]].forEach(([n,a])=>{const w=XLSX.utils.aoa_to_sheet(a);w["!cols"]=a[0].map((_,c)=>({wch:Math.min(46,Math.max(10,...a.slice(0,60).map(r=>String(r[c]??"").length)+2))}));XLSX.utils.book_append_sheet(wb,w,n)});
+const out=XLSX.write(wb,{bookType:"xlsx",type:"array"});
+try{await dl.save({filename:"Store_Orders_"+new Date().toISOString().slice(0,10)+".xlsx",data:new Blob([out])})}catch(e){if(e&&e.code!="declined")$("sync").textContent="Download failed ("+(e.code||"error")+")."}};
+function showMeta(){$("fi").textContent="IASR file in use: "+META.name+(META.t>BUILD?" (uploaded "+new Date(META.t).toLocaleString()+")":"")}
+function applyData(nd,m){SK=nd.skus;ROWS=nd.rows;META=m;recalc();kpis();if(!$("v2").hidden)summary();if(ME)table();showMeta()}
+async function parseIasr(f){const wb=XLSX.read(await f.arrayBuffer(),{type:"array"});const a=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:null});
+const h=(a[0]||[]).map(x=>String(x||"").trim().toLowerCase()),ix=n=>h.indexOf(n);
+const c={loc:ix("loc id"),stat:ix("status"),sku:ix("vendor sku"),name:ix("product name"),st:ix("in stock"),oo:ix("on order"),uc:ix("unit cost"),w1:ix("week 1"),w2:ix("week 2"),l2:ix("l2ws"),al:ix("allocation")};
+const miss=Object.keys(c).filter(k=>c[k]<0);if(miss.length)throw new Error("these columns are missing: "+miss.join(", "));
+const skus=[],idx={},rows=[];let skipped=0;const num=v=>{v=Number(v);return Number.isFinite(v)?v:0};
+a.slice(1).forEach(r=>{const loc=Number(r[c.loc]);if(!r[c.loc]||!Number.isFinite(loc))return;if(!byId[loc]){skipped++;return}
+const sku=String(r[c.sku]||"").trim();if(!sku)return;if(!(sku in idx)){idx[sku]=skus.length;skus.push([sku,String(r[c.name]||"").trim(),num(r[c.uc])])}
+const al=num(r[c.al]),lim=r[17]==null?al:num(r[17]);
+rows.push([loc,idx[sku],String(r[c.stat]||"").trim(),num(r[c.st]),num(r[c.oo]),r[c.l2]==null?num(r[c.w1])+num(r[c.w2]):num(r[c.l2]),lim])});
+if(!rows.length)throw new Error("no store rows found");return{skus,rows,skipped}}
+$("up").onclick=()=>$("fl").click();
+$("fl").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+try{const nd=await parseIasr(f),m={name:f.name,t:Date.now()};applyData(nd,m);
+let msg="IASR loaded: "+nd.rows.length+" rows, "+nd.skus.length+" products."+(nd.skipped?" "+nd.skipped+" row(s) of non-manager stores ignored.":"")+" Existing orders were kept.";
+if(dbh){try{await dbh.doc("config/iasr").set({d:JSON.stringify({skus:nd.skus,rows:nd.rows}),name:m.name,t:m.t});msg+=" Shared with everyone."}catch(x){msg+=" Could not share it (check access). It shows on this device only."}}
+else msg+=" It shows on this device only (not connected to the shared sheet).";
+$("fm").textContent=msg}catch(x){$("fm").textContent="Could not read this file: "+x.message}};
+let ck=0;$("ca").onclick=()=>{if(!ck){ck=1;$("ca").textContent="Click again to clear ALL orders";setTimeout(()=>{ck=0;$("ca").textContent="Clear all orders"},4000);return}
+ck=0;$("ca").textContent="Clear all orders";Q={};save();ST.forEach(s=>push(s.id));kpis();table();if(!$("v2").hidden)summary()};
+async function H(u,p){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(SALT+":"+u+":"+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function start(un){const u=USERS[un],adm=u.role=="admin";ME=un;$("login").hidden=true;$("app").hidden=false;
+const list=(adm||!u.loc)?ST:ST.filter(s=>s.id==u.loc);
+$("store").innerHTML=list.map(s=>`<option value="${s.id}">${s.id} - ${s.name}${s.mgr?" (Manager)":""}</option>`).join("");
+["kpis","exp","t2","adm"].forEach(id=>$(id).style.display=adm?"":"none");
+$("who").textContent=adm?"Signed in as Admin":"Signed in as Store team (select your store below)";
+tab(1);table();kpis();showMeta()}
+async function login(){const un=$("lu").value.trim().toLowerCase(),pw=$("lp").value;$("le").textContent="";
+try{const u=USERS[un];const h=u?await H(un,pw):"";if(!u||h!==u.h){$("le").textContent="Wrong username or password.";return}
+try{sessionStorage.setItem("s",JSON.stringify({u:un,h}))}catch(e){}$("lp").value="";start(un)}catch(e){$("le").textContent="Sign in is not available in this browser."}}
+$("lb").onclick=login;$("lp").onkeydown=e=>{if(e.key=="Enter")login()};$("lu").onkeydown=e=>{if(e.key=="Enter")$("lp").focus()};
+$("lo").onclick=()=>{try{sessionStorage.removeItem("s")}catch(e){}location.reload()};
+try{const s=JSON.parse(sessionStorage.getItem("s")||"null");if(s&&USERS[s.u]&&USERS[s.u].h===s.h)start(s.u)}catch(e){}
+</script></body></html>
